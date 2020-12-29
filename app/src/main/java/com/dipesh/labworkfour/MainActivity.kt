@@ -1,9 +1,12 @@
 package com.dipesh.labworkfour
 
+import android.app.DatePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private  lateinit var etEmpName:EditText
@@ -11,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var etAddress:EditText
     private lateinit var etJoinDate:EditText
     private lateinit var btnSubmit:Button
+    lateinit var selectedItem:String
     val departments= arrayOf("Computer Science",
         "Management", "Network","Academic")
 
@@ -24,20 +28,29 @@ class MainActivity : AppCompatActivity() {
         btnSubmit=findViewById(R.id.btnSubmit)
 
         spinner()
-        btnSubmit.setOnClickListener {
 
+        etJoinDate.setOnClickListener {
+            joinDate()
         }
 
-
-
-
-
+        btnSubmit.setOnClickListener {
+            val name=etEmpName.text
+            val address=etAddress.text
+            val builder=AlertDialog.Builder(this)
+            builder.setTitle("Employee information")
+            builder.setMessage("Employee Name: $name\n\nDepartment: $selectedItem\n\nAddress: $address\n\nJoin date: ${etJoinDate.text} ")
+            builder.setNegativeButton("Close"){
+                dialogInterface,which->
+            }
+            val alertDialog:AlertDialog=builder.create()
+            alertDialog.setCancelable(false)
+            alertDialog.show()
+        }
     }
 
     private fun spinner(){
         val arrayAdapter=ArrayAdapter(this, android.R.layout.simple_list_item_1,
             departments)
-
         spinner.adapter=arrayAdapter
         spinner.onItemSelectedListener=
             object:AdapterView.OnItemSelectedListener{
@@ -47,12 +60,24 @@ class MainActivity : AppCompatActivity() {
                     position: Int,
                     id: Long
                 ) {
-                    val selectedItem=parent?.getItemAtPosition(position).toString()
+                     selectedItem=parent?.getItemAtPosition(position).toString()
                 }
-
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                     TODO("Not yet implemented")
                 }
             }
+    }
+
+    private fun joinDate(){
+        val c=Calendar.getInstance()
+        val year=c.get(Calendar.YEAR)
+        val month=c.get(Calendar.MONTH)
+        val day=c.get (Calendar.DAY_OF_MONTH)
+        val datePickerDialog=DatePickerDialog(this,
+            DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                etJoinDate.setText("$dayOfMonth/${month+1}/$year")
+            },year, month,day
+            )
+        datePickerDialog.show()
     }
 }

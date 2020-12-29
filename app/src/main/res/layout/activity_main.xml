@@ -83,6 +83,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:textSize="20sp"
+        android:focusable="false"
         android:layout_toRightOf="@id/tvJoinDate"
         android:layout_below="@id/tvAddress"
         android:layout_width="match_parent"
